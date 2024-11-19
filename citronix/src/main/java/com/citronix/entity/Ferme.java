@@ -36,6 +36,7 @@ public class Ferme {
 
     @OneToMany(mappedBy = "ferme", cascade = CascadeType.ALL)
     @NotEmpty(message = "La liste des champs ne peut pas être vide")
+    @Size(max = 10, message = "Une ferme ne peut contenir plus de 10 champs")
     private List<Champ> champs;
 
 
