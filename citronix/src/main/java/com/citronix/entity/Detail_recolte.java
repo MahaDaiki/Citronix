@@ -11,20 +11,18 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetailRecolte {
+public class Detail_recolte {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "La saison est requise")
-    private Saison saison;
+
 
     @PositiveOrZero(message = "La quantité ne peut pas être négative")
     private double quantite;
 
-    @NotNull(message = "La récolte associée est requise")
     @ManyToOne
+    @NotNull(message = "La récolte associée est requise")
     private Recolte recolte;
 
     @ManyToOne

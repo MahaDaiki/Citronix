@@ -33,6 +33,6 @@ public class Arbre {
     @ManyToOne
     private Champ champ;
 
-    @OneToMany(mappedBy = "arbre", cascade = CascadeType.ALL)
-    private List<DetailRecolte> detailRecoltes;
+    @ManyToMany(mappedBy = "arbres")
+    private List<Recolte> recoltes;
 }

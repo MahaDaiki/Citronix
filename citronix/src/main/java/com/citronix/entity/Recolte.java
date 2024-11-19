@@ -21,12 +21,21 @@ public class Recolte {
     @NotNull(message = "La date de récolte est requise")
     private LocalDate dateRecolte;
 
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "La saison est requise")
+    private Saison saison;
+
     @PositiveOrZero(message = "La quantité totale ne peut pas être négative")
     private double quantiteTotal;
 
-    @OneToMany(mappedBy = "recolte", cascade = CascadeType.ALL)
-    @NotNull(message = "La liste des détails de récolte ne peut pas être nulle")
-    private List<DetailRecolte> detailRecoltes;
+    @ManyToMany
+    @JoinTable(
+            name = "detail_recolte",
+            joinColumns = @JoinColumn(name = "recolte_id"),
+            inverseJoinColumns = @JoinColumn(name = "arbre_id")
+    )
+    @NotNull(message = "La liste des arbres associés ne peut pas être nulle")
+    private List<Arbre> arbres;
 
     @OneToMany(mappedBy = "recolte", cascade = CascadeType.ALL)
     private List<Vente> ventes;
