@@ -40,6 +40,8 @@ public class ChampController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ChampDto> updateChamp(@PathVariable int id, @Valid @RequestBody ChampDto champDto) {
+        System.out.println("Ferme ID in request: " + champDto.getFermeId());
+
         ChampDto updatedChamp = champService.updateChamp(id, champDto);
         return ResponseEntity.ok(updatedChamp);
     }
