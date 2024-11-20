@@ -52,7 +52,7 @@ public class FermeServiceImpl implements FermeServiceInt {
             return new FermeDto().toDTO(ferme.get());
         }
         else {
-            throw new RuntimeException("Ferme not found");
+            throw new ResourceNotFoundException("Ferme not found");
         }
     }
 
