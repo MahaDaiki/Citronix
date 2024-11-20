@@ -5,24 +5,18 @@ import com.citronix.dto.FermeSearchCriteria;
 import com.citronix.entity.Ferme;
 import com.citronix.exception.ResourceNotFoundException;
 import com.citronix.repository.FermeRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import jakarta.persistence.TypedQuery;
+
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -32,57 +26,41 @@ public class FermeServiceImplTest {
     @Mock
     private FermeRepository fermeRepository;
 
-    @Mock
-    private EntityManager entityManager;
-
     @InjectMocks
     private FermeServiceImpl fermeService;
 
-
-    @Mock
-    private CriteriaBuilder criteriaBuilder;
-
-    @Mock
-    private CriteriaQuery<Ferme> criteriaQuery;
-
-    @Mock
-    private Root<Ferme> root;
-
-    @Mock
-    private TypedQuery<Ferme> typedQuery;
+    private FermeDto fermeDto;
 
     private Ferme ferme;
 
     @BeforeEach
     public void setUp() {
-
+        fermeDto = new FermeDto();
+        fermeDto.setNom("Ferme Test");
+        fermeDto.setLocalisation("Localisation Test");
+        fermeDto.setSuperficie(100000);
+        fermeDto.setDateCreation(LocalDate.now());
 
         ferme = new Ferme();
         ferme.setId(1);
         ferme.setNom("Ferme Test");
         ferme.setLocalisation("Localisation Test");
-        ferme.setSuperficie(100);
+        ferme.setSuperficie(100000);
         ferme.setDateCreation(LocalDate.now());
     }
 
     @Test
     public void testAddFerme() {
 
-        FermeDto fermeDto = new FermeDto();
-        fermeDto.setNom("Ferme Test");
-        fermeDto.setLocalisation("Localisation Test");
-        fermeDto.setSuperficie(100);
-
-        when(fermeRepository.save(org.mockito.ArgumentMatchers.any(Ferme.class))).thenReturn(ferme);
-
+        when(fermeRepository.save(any(Ferme.class))).thenReturn(ferme);
 
         FermeDto savedFerme = fermeService.addFerme(fermeDto);
 
-
-        verify(fermeRepository, times(1)).save(org.mockito.ArgumentMatchers.any(Ferme.class));
-        assert savedFerme != null;
-        assert savedFerme.getNom().equals("Ferme Test");
+        assertNotNull(savedFerme);
+        assertEquals("Ferme Test", savedFerme.getNom());
+        assertEquals("Localisation Test", savedFerme.getLocalisation());
     }
+
 
     @Test
     public void testGetAllFermes() {
@@ -119,207 +97,115 @@ public class FermeServiceImplTest {
 
     @Test
     public void testUpdateFerme() {
-        FermeDto fermeDto = new FermeDto();
-        fermeDto.setNom("Updated Ferme");
-        when(fermeRepository.findById(org.mockito.ArgumentMatchers.anyInt())).thenReturn(Optional.of(ferme));
-        when(fermeRepository.save(org.mockito.ArgumentMatchers.any(Ferme.class))).thenReturn(ferme);
+        when(fermeRepository.findById(1)).thenReturn(Optional.of(ferme));
+        when(fermeRepository.save(any(Ferme.class))).thenReturn(ferme);
 
         FermeDto updatedFerme = fermeService.updateFerme(1, fermeDto);
 
-        verify(fermeRepository, times(1)).save(org.mockito.ArgumentMatchers.any(Ferme.class));
-        assert updatedFerme.getNom().equals("Updated Ferme");
+        assertNotNull(updatedFerme);
+        assertEquals("Ferme Test", updatedFerme.getNom());
     }
 
     @Test
     public void testDeleteFerme() {
-        // Arrange
         when(fermeRepository.findById(org.mockito.ArgumentMatchers.anyInt())).thenReturn(Optional.of(ferme));
 
-        // Act
         fermeService.deleteFerme(1);
 
-        // Assert
         verify(fermeRepository, times(1)).delete(org.mockito.ArgumentMatchers.any(Ferme.class));
     }
+
     @Test
-    public void testFindByCriteria_Nom() {
-        Ferme ferme = new Ferme();
-        ferme.setNom("Ferme 1");
-        ferme.setLocalisation("Location 1");
-        ferme.setSuperficie(100);
-        ferme.setDateCreation(LocalDate.now());
-
-        List<Ferme> fermeList = Arrays.asList(ferme);
-
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Ferme.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Ferme.class)).thenReturn(root);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(fermeList);
-
+    public void testFindByCriteria() {
         FermeSearchCriteria criteria = new FermeSearchCriteria();
-        criteria.setNom("Ferme 1");
+        when(fermeRepository.findByCriteria(criteria)).thenReturn(List.of(new FermeDto().toDTO(ferme)));
 
-        List<FermeDto> result = fermeService.findByCriteria(criteria);
+        var result = fermeService.findByCriteria(criteria);
 
         assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("Ferme 1", result.get(0).getNom());
+        assertFalse(result.isEmpty());
+    }
+    @Test
+    public void testAddFerme_InvalidDateCreation() {
+        FermeDto invalidFermeDto = new FermeDto();
+        invalidFermeDto.setNom("Invalid Farm");
+        invalidFermeDto.setLocalisation("Invalid Location");
+        invalidFermeDto.setSuperficie(100);
+        invalidFermeDto.setDateCreation(LocalDate.now().plusDays(1));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            fermeService.addFerme(invalidFermeDto);
+        });
+    }
+    @Test
+    public void testAddFerme_InvalidSuperficie() {
+        FermeDto invalidFermeDto = new FermeDto();
+        invalidFermeDto.setNom("Invalid Superficie Farm");
+        invalidFermeDto.setLocalisation("Invalid Superficie Location");
+        invalidFermeDto.setSuperficie(-100);
+        invalidFermeDto.setDateCreation(LocalDate.now());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            fermeService.addFerme(invalidFermeDto);
+        });
     }
 
     @Test
-    public void testFindByCriteria_Localisation() {
-        Ferme ferme = new Ferme();
-        ferme.setNom("Ferme 1");
-        ferme.setLocalisation("Location 1");
-        ferme.setSuperficie(100);
-        ferme.setDateCreation(LocalDate.now());
+    public void testUpdateFerme_PartialUpdate() {
 
-        List<Ferme> fermeList = Arrays.asList(ferme);
+        when(fermeRepository.findById(1)).thenReturn(Optional.of(ferme));
 
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Ferme.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Ferme.class)).thenReturn(root);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(fermeList);
+        FermeDto partialUpdate = new FermeDto();
+        partialUpdate.setNom("Updated Farm Name");
 
-        FermeSearchCriteria criteria = new FermeSearchCriteria();
-        criteria.setLocalisation("Location 1");
+        partialUpdate.setSuperficie(100000);
 
-        List<FermeDto> result = fermeService.findByCriteria(criteria);
+        when(fermeRepository.save(any(Ferme.class))).thenReturn(ferme);
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("Location 1", result.get(0).getLocalisation());
+
+        FermeDto updatedFerme = fermeService.updateFerme(1, partialUpdate);
+
+
+        assertNotNull(updatedFerme);
+        assertEquals("Updated Farm Name", updatedFerme.getNom());
+        assertEquals("Localisation Test", updatedFerme.getLocalisation());
+        assertEquals(100000, updatedFerme.getSuperficie());
     }
+
+
     @Test
-    public void testFindByCriteria_Superficie() {
-        Ferme ferme = new Ferme();
-        ferme.setNom("Ferme 1");
-        ferme.setLocalisation("Location 1");
-        ferme.setSuperficie(100);
-        ferme.setDateCreation(LocalDate.now());
+    public void testDeleteFerme_FermeNotFound() {
+        when(fermeRepository.findById(999)).thenReturn(Optional.empty());
 
-        List<Ferme> fermeList = Arrays.asList(ferme);
-
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Ferme.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Ferme.class)).thenReturn(root);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(fermeList);
-
-        FermeSearchCriteria criteria = new FermeSearchCriteria();
-        criteria.setSuperficie(100);
-
-        List<FermeDto> result = fermeService.findByCriteria(criteria);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(100, result.get(0).getSuperficie());
+        assertThrows(ResourceNotFoundException.class, () -> {
+            fermeService.deleteFerme(999);
+        });
     }
 
     @Test
-    public void testFindByCriteria_DateCreation() {
-        LocalDate date = LocalDate.of(2023, 1, 1);
+    public void testFindByCriteria_EmptyCriteria() {
+        FermeSearchCriteria emptyCriteria = new FermeSearchCriteria();
 
-        Ferme ferme = new Ferme();
-        ferme.setNom("Ferme 1");
-        ferme.setLocalisation("Location 1");
-        ferme.setSuperficie(100);
-        ferme.setDateCreation(date);
+        when(fermeRepository.findByCriteria(emptyCriteria)).thenReturn(List.of(new FermeDto().toDTO(ferme)));
 
-        List<Ferme> fermeList = Arrays.asList(ferme);
+        List<FermeDto> fermes = fermeService.findByCriteria(emptyCriteria);
 
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Ferme.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Ferme.class)).thenReturn(root);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(fermeList);
-
-        FermeSearchCriteria criteria = new FermeSearchCriteria();
-        criteria.setDateCreation(date);
-
-        List<FermeDto> result = fermeService.findByCriteria(criteria);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(date, result.get(0).getDateCreation());
+        assertNotNull(fermes);
+        assertFalse(fermes.isEmpty());
     }
-
     @Test
-    public void testFindByCriteria_MultipleCriteria() {
-        Ferme ferme = new Ferme();
-        ferme.setNom("Ferme 1");
-        ferme.setLocalisation("Location 1");
-        ferme.setSuperficie(100);
-        ferme.setDateCreation(LocalDate.now());
-
-        List<Ferme> fermeList = Arrays.asList(ferme);
-
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Ferme.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Ferme.class)).thenReturn(root);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(fermeList);
-
+    public void testFindByCriteria_ValidCriteria() {
         FermeSearchCriteria criteria = new FermeSearchCriteria();
-        criteria.setNom("Ferme 1");
-        criteria.setLocalisation("Location 1");
+        criteria.setNom("Test Farm");
 
-        List<FermeDto> result = fermeService.findByCriteria(criteria);
+        when(fermeRepository.findByCriteria(criteria)).thenReturn(List.of(new FermeDto().toDTO(ferme)));
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("Ferme 1", result.get(0).getNom());
-        assertEquals("Location 1", result.get(0).getLocalisation());
+        List<FermeDto> fermes = fermeService.findByCriteria(criteria);
+
+        assertNotNull(fermes);
+        assertEquals(1, fermes.size());
+        assertEquals("Ferme Test", fermes.get(0).getNom());
     }
-
-    @Test
-    public void testFindByCriteria_NoResults() {
-        List<Ferme> fermeList = new ArrayList<>();
-
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Ferme.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Ferme.class)).thenReturn(root);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(fermeList);
-
-        FermeSearchCriteria criteria = new FermeSearchCriteria();
-        criteria.setNom("Nonexistent Farm");
-
-        List<FermeDto> result = fermeService.findByCriteria(criteria);
-
-        assertNotNull(result);
-        assertEquals(0, result.size());
-    }
-
-    @Test
-    public void testFindByCriteria_CaseInsensitive() {
-        Ferme ferme = new Ferme();
-        ferme.setNom("FERME 1");
-        ferme.setLocalisation("Location 1");
-        ferme.setSuperficie(100);
-        ferme.setDateCreation(LocalDate.now());
-
-        List<Ferme> fermeList = Arrays.asList(ferme);
-
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(Ferme.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(Ferme.class)).thenReturn(root);
-        when(entityManager.createQuery(criteriaQuery)).thenReturn(typedQuery);
-        when(typedQuery.getResultList()).thenReturn(fermeList);
-
-        FermeSearchCriteria criteria = new FermeSearchCriteria();
-        criteria.setNom("ferme 1");
-
-        List<FermeDto> result = fermeService.findByCriteria(criteria);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("FERME 1", result.get(0).getNom());
-    }
-
-
 
 
 

@@ -31,6 +31,10 @@ public class ChampServiceImpl implements ChampServiceInt {
                 .orElseThrow(() -> new ResourceNotFoundException("Ferme not found"));
 
         List<Champ> champs = ferme.getChamps();
+
+        if (champs == null) {
+            champs = new ArrayList<>();
+        }
         Validator.validateSuperficie(champDto.getSuperficie(), champs);
         Validator.validateChampSuperficie(champDto.getSuperficie());
         Champ champ = champDto.toEntity(ferme);
@@ -92,9 +96,16 @@ public class ChampServiceImpl implements ChampServiceInt {
             Ferme ferme = fermeRepository.findById(champDto.getFermeId())
                     .orElseThrow(() -> new ResourceNotFoundException("Ferme with ID " + champDto.getFermeId() + " not found"));
 
-            if (ferme.getChamps().size() >= 10) {
+
+            List<Champ> champs = ferme.getChamps();
+            if (champs == null) {
+                champs = new ArrayList<>();
+            }
+
+            if (champs.size() >= 10) {
                 throw new IllegalArgumentException("This farm already has 10 champs. You cannot add more.");
             }
+
             existingChamp.setFerme(ferme);
         }
 
