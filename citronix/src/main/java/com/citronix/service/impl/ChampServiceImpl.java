@@ -74,23 +74,33 @@ public class ChampServiceImpl implements ChampServiceInt {
         Champ existingChamp = champRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Champ with ID " + id + " not found"));
 
-        Validator.validateChampSuperficie(champDto.getSuperficie());
+        System.out.println("Updating Champ with ID: " + id);
+        System.out.println("ChampDto: " + champDto);
 
-        Ferme ferme = fermeRepository.findById(champDto.getFermeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ferme with ID " + champDto.getFermeId() + " not found"));
-        if (ferme.getChamps().size() >= 10) {
-            throw new IllegalArgumentException("This farm already has 10 champs. You cannot add more.");
+
+        if (champDto.getSuperficie() > 0) {
+            Validator.validateChampSuperficie(champDto.getSuperficie());
+            existingChamp.setSuperficie(champDto.getSuperficie());
         }
+
+
         if (champDto.getNom() != null) {
             existingChamp.setNom(champDto.getNom());
         }
-        if (champDto.getSuperficie() > 0) {
-            existingChamp.setSuperficie(champDto.getSuperficie());
-        }
+
         if (champDto.getFermeId() > 0) {
+            Ferme ferme = fermeRepository.findById(champDto.getFermeId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Ferme with ID " + champDto.getFermeId() + " not found"));
+
+            if (ferme.getChamps().size() >= 10) {
+                throw new IllegalArgumentException("This farm already has 10 champs. You cannot add more.");
+            }
             existingChamp.setFerme(ferme);
         }
+
         Champ updatedChamp = champRepository.save(existingChamp);
+
+
         return ChampDto.toDto(updatedChamp);
     }
 
