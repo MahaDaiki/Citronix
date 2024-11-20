@@ -30,6 +30,10 @@ public class Ferme {
     @NotBlank(message = "La localisation est requise")
     private String localisation;
 
+
+    @Min(value = 1000, message = "La superficie doit être supérieure ou égale à 1000 m² (0.1 hectare).")
+    @Max(value = 10000000, message = "La superficie ne peut pas dépasser 10 000 000 m² (100 hectares).")
+    @NotNull(message = "Superficie ne peut pas etre null")
     private double superficie;
 
     private LocalDate dateCreation;

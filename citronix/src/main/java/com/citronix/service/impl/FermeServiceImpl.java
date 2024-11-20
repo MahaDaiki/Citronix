@@ -1,5 +1,6 @@
 package com.citronix.service.impl;
 
+import com.citronix.Validator.Validator;
 import com.citronix.dto.FermeDto;
 import com.citronix.dto.FermeSearchCriteria;
 import com.citronix.entity.Ferme;
@@ -30,6 +31,8 @@ public class FermeServiceImpl implements FermeServiceInt {
 
     @Override
     public FermeDto addFerme(FermeDto fermeDTO) {
+        Validator.validateDateCreation(fermeDTO.getDateCreation());
+        Validator.validateFermeSuperficie(fermeDTO.getSuperficie());
         Ferme ferme = fermeDTO.toEntity();
         Ferme savedFerme = fermeRepository.save(ferme);
         return new FermeDto().toDTO(savedFerme);
@@ -60,6 +63,9 @@ public class FermeServiceImpl implements FermeServiceInt {
     public FermeDto updateFerme(int id, FermeDto fermeDTO) {
         Ferme existingFerme = fermeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ferme with ID " + id + " not found"));
+
+
+        Validator.validateFermeSuperficie(fermeDTO.getSuperficie());
 
         if (fermeDTO.getNom() != null) {
             existingFerme.setNom(fermeDTO.getNom());

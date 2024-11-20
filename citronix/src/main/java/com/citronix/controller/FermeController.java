@@ -4,6 +4,7 @@ package com.citronix.controller;
 import com.citronix.dto.FermeDto;
 import com.citronix.dto.FermeSearchCriteria;
 import com.citronix.service.interfaces.FermeServiceInt;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class FermeController {
     private FermeServiceInt fermeService;
 
     @PostMapping("/add")
-    public ResponseEntity<FermeDto> addFerme(@RequestBody FermeDto fermeDto) {
+    public ResponseEntity<FermeDto> addFerme(@Valid @RequestBody FermeDto fermeDto) {
         FermeDto result = fermeService.addFerme(fermeDto);
         return ResponseEntity.ok(result);
     }
@@ -36,7 +37,7 @@ public class FermeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FermeDto> updateFerme(@PathVariable int id, @RequestBody FermeDto fermeDTO) {
+    public ResponseEntity<FermeDto> updateFerme(@PathVariable int id,@Valid @RequestBody FermeDto fermeDTO) {
         FermeDto updatedFerme = fermeService.updateFerme(id, fermeDTO);
         return ResponseEntity.ok(updatedFerme);
     }
