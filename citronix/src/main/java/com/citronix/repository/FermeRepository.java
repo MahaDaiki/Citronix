@@ -1,5 +1,6 @@
 package com.citronix.repository;
 
+import com.citronix.dto.ChampDto;
 import com.citronix.dto.FermeSearchCriteria;
 import com.citronix.entity.Ferme;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,8 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FermeRepository extends JpaRepository<Ferme, Integer> {
+public interface FermeRepository extends JpaRepository<Ferme, Integer>,CustomFermeRepository {
     Optional<Ferme> findById(int id);
+
 
 
 

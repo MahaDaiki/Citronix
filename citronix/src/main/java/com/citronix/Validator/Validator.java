@@ -36,7 +36,7 @@ public class Validator {
 
 
     public static void validateChampSuperficie(double superficie) {
-        if (superficie < 0.1) {
+        if (superficie > 1000) {
             throw new IllegalArgumentException("The field area must be at least 0.1 hectare.");
         }
     }

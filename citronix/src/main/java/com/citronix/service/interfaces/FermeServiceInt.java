@@ -1,5 +1,6 @@
 package com.citronix.service.interfaces;
 
+import com.citronix.dto.ChampDto;
 import com.citronix.dto.FermeDto;
 import com.citronix.dto.FermeSearchCriteria;
 
@@ -12,4 +13,5 @@ public interface FermeServiceInt {
     FermeDto updateFerme(int id, FermeDto fermeDTO);
     void deleteFerme(int id);
     List<FermeDto> findByCriteria(FermeSearchCriteria criteria);
+
 }
