@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FermeDto {
-    private long id;
+    private int id;
     private String nom;
     private String localisation;
     private double superficie;

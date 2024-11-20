@@ -2,6 +2,7 @@ package com.citronix.controller;
 
 
 import com.citronix.dto.FermeDto;
+import com.citronix.dto.FermeSearchCriteria;
 import com.citronix.service.interfaces.FermeServiceInt;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,12 @@ public class FermeController {
     public ResponseEntity<Void> deleteFerme(@PathVariable int id) {
         fermeService.deleteFerme(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/search")
+    public List<FermeDto> searchFermes(@RequestBody FermeSearchCriteria criteria) {
+        List<FermeDto> fermeDtos = fermeService.findByCriteria(criteria);
+        return ResponseEntity.ok(fermeDtos).getBody();
     }
 
 
