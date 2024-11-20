@@ -8,4 +8,6 @@ public interface FermeServiceInt {
     FermeDto addFerme(FermeDto fermeDTO);
     List<FermeDto> getAllFermes();
     FermeDto getFermeById(int id);
+    FermeDto updateFerme(int id, FermeDto fermeDTO);
+    void deleteFerme(int id);
 }

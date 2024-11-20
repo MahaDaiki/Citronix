@@ -2,6 +2,7 @@ package com.citronix.service.impl;
 
 import com.citronix.dto.FermeDto;
 import com.citronix.entity.Ferme;
+import com.citronix.exception.ResourceNotFoundException;
 import com.citronix.repository.FermeRepository;
 import com.citronix.service.interfaces.FermeServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,35 @@ public class FermeServiceImpl implements FermeServiceInt {
         else {
             throw new RuntimeException("Ferme not found");
         }
+    }
+
+    @Override
+    public FermeDto updateFerme(int id, FermeDto fermeDTO) {
+        Ferme existingFerme = fermeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ferme with ID " + id + " not found"));
+
+        if (fermeDTO.getNom() != null) {
+            existingFerme.setNom(fermeDTO.getNom());
+        }
+        if (fermeDTO.getLocalisation() != null) {
+            existingFerme.setLocalisation(fermeDTO.getLocalisation());
+        }
+        if (fermeDTO.getSuperficie() != 0) {
+            existingFerme.setSuperficie(fermeDTO.getSuperficie());
+        }
+        if (fermeDTO.getDateCreation() != null) {
+            existingFerme.setDateCreation(fermeDTO.getDateCreation());
+        }
+
+
+        Ferme updatedFerme = fermeRepository.save(existingFerme);
+        return new FermeDto().toDTO(updatedFerme);
+    }
+
+    @Override
+    public void deleteFerme(int id) {
+        Ferme ferme = fermeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ferme with ID " + id + " not found"));
+        fermeRepository.delete(ferme);
     }
 }
