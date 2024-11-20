@@ -34,5 +34,17 @@ public class FermeController {
         return ResponseEntity.ok(ferme);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<FermeDto> updateFerme(@PathVariable int id, @RequestBody FermeDto fermeDTO) {
+        FermeDto updatedFerme = fermeService.updateFerme(id, fermeDTO);
+        return ResponseEntity.ok(updatedFerme);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFerme(@PathVariable int id) {
+        fermeService.deleteFerme(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
