@@ -3,10 +3,7 @@ package com.citronix.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +25,7 @@ public class Champ {
     private String nom;
 
     @NotNull(message = "La superficie est requise")
-    @DecimalMin(value = "0.1", message = "La superficie d'un champ doit être au minimum de 0.1 hectare")
+    @Min(value = 1000, message = "La superficie du champ doit être au moins 1000 m² (0.1 hectare).")
     private double superficie;
 
     @ManyToOne
