@@ -22,7 +22,7 @@ public class Ferme {
 
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @NotBlank(message = "Le nom est requis")
     private String nom;
