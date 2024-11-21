@@ -33,4 +33,7 @@ public class Champ {
     private Ferme ferme;
 
 
+    @OneToMany(mappedBy = "champ", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Arbre> arbres;
+
 }
