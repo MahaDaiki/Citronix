@@ -1,9 +1,11 @@
 package com.citronix.Validator;
 
 import com.citronix.entity.Champ;
+import com.citronix.entity.Ferme;
 
 import java.time.LocalDate;
 import java.util.List;
+
 
 public class Validator {
     public static void validateSuperficie(double superficie, List<Champ> champs) {
@@ -56,6 +58,19 @@ public class Validator {
 
         if (superficie > 10000000) {
             throw new IllegalArgumentException("La superficie ne peut pas dépasser 10 000 000 m² (100 hectares).");
+        }
+    }
+
+    public static void validateDatePlantation(Ferme ferme, LocalDate datePlantation) {
+        if (datePlantation.isBefore(ferme.getDateCreation())) {
+            throw new IllegalArgumentException(
+                    "The planting date must be after the farm's creation date (" + ferme.getDateCreation() + ")."
+            );
+        }
+        if (datePlantation.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException(
+                    "The planting date cannot be in the future."
+            );
         }
     }
 }
