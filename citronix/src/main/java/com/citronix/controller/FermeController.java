@@ -20,6 +20,7 @@ public class FermeController {
 
     @PostMapping("/add")
     public ResponseEntity<FermeDto> addFerme(@Valid @RequestBody FermeDto fermeDto) {
+        System.out.println("Received Ferme DTO: " + fermeDto);
         FermeDto result = fermeService.addFerme(fermeDto);
         return ResponseEntity.ok(result);
     }

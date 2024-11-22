@@ -5,6 +5,7 @@ import com.citronix.dto.ChampDto;
 import com.citronix.entity.Champ;
 import com.citronix.entity.Ferme;
 import com.citronix.exception.ResourceNotFoundException;
+import com.citronix.mapper.ChampMapper;
 import com.citronix.repository.ChampRepository;
 import com.citronix.repository.FermeRepository;
 import com.citronix.service.interfaces.ChampServiceInt;
@@ -25,6 +26,9 @@ public class ChampServiceImpl implements ChampServiceInt {
     @Autowired
     private FermeRepository fermeRepository;
 
+    @Autowired
+    private ChampMapper champMapper;
+
     @Override
     public ChampDto addChamp(ChampDto champDto) {
         Ferme ferme = fermeRepository.findById(champDto.getFermeId())
@@ -37,15 +41,16 @@ public class ChampServiceImpl implements ChampServiceInt {
         }
         Validator.validateSuperficie(champDto.getSuperficie(), champs);
         Validator.validateChampSuperficie(champDto.getSuperficie());
-        Champ champ = champDto.toEntity(ferme);
+        Champ champ = champMapper.toEntity(champDto);
 
+        champ.setFerme(ferme);
         Champ savedChamp = champRepository.save(champ);
 
         champs.add(savedChamp);
         ferme.setChamps(champs);
         fermeRepository.save(ferme);
 
-        return ChampDto.toDto(savedChamp);
+        return champMapper.toDto(savedChamp);
     }
 
 
@@ -54,7 +59,7 @@ public class ChampServiceImpl implements ChampServiceInt {
         List<Champ> champs = champRepository.findAll();
         List<ChampDto> champDtos = new ArrayList<>();
         for (Champ champ : champs) {
-            champDtos.add(ChampDto.toDto(champ));
+            champDtos.add(champMapper.toDto(champ));
         }
         return champDtos;
     }
@@ -63,7 +68,7 @@ public class ChampServiceImpl implements ChampServiceInt {
     public ChampDto getChampById(int id) {
         Champ champ = champRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Champ not found"));
-        return ChampDto.toDto(champ);
+        return champMapper.toDto(champ);
     }
 
     @Override
@@ -112,7 +117,7 @@ public class ChampServiceImpl implements ChampServiceInt {
         Champ updatedChamp = champRepository.save(existingChamp);
 
 
-        return ChampDto.toDto(updatedChamp);
+        return champMapper.toDto(updatedChamp);
     }
 
     @Override
@@ -125,7 +130,7 @@ public class ChampServiceImpl implements ChampServiceInt {
 
         List<ChampDto> champDtos = new ArrayList<>();
         for (Champ champ : champs) {
-            champDtos.add(ChampDto.toDto(champ));
+            champDtos.add(champMapper.toDto(champ));
         }
         return champDtos;
     }

@@ -3,6 +3,7 @@ package com.citronix.repository.Implementation;
 import com.citronix.dto.FermeDto;
 import com.citronix.dto.FermeSearchCriteria;
 import com.citronix.entity.Ferme;
+import com.citronix.mapper.FermeMapper;
 import com.citronix.repository.CustomFermeRepository;
 import com.citronix.repository.FermeRepository;
 import jakarta.persistence.EntityManager;
@@ -20,6 +21,9 @@ import java.util.List;
 public class FermeRepositoryImpl  implements CustomFermeRepository {
     @Autowired
     private EntityManager entityManager;
+
+    @Autowired
+    private FermeMapper fermeMapper;
 
     @Override
     public List<FermeDto> findByCriteria(FermeSearchCriteria criteria) {
@@ -47,7 +51,7 @@ public class FermeRepositoryImpl  implements CustomFermeRepository {
         List<Ferme> fermeList = entityManager.createQuery(criteriaQuery).getResultList();
         List<FermeDto> fermeDtoList = new ArrayList<>();
         for (Ferme ferme : fermeList) {
-            fermeDtoList.add(new FermeDto().toDTO(ferme));
+            fermeDtoList.add(fermeMapper.toDto(ferme));
         }
 
 

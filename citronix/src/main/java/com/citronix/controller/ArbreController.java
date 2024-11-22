@@ -2,6 +2,7 @@ package com.citronix.controller;
 
 
 import com.citronix.service.interfaces.ArbreServiceInt;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.citronix.dto.ArbreDto;
@@ -20,7 +21,7 @@ public class ArbreController {
 
 
             @PostMapping("/add")
-            public ResponseEntity<ArbreDto> addArbre(@RequestBody ArbreDto arbreDto) {
+            public ResponseEntity<ArbreDto> addArbre(@Valid @RequestBody ArbreDto arbreDto) {
                 ArbreDto arbre = arbreService.addArbre(arbreDto);
                 return ResponseEntity.ok(arbre);
             }

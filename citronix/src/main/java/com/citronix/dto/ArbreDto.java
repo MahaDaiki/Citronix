@@ -4,6 +4,7 @@ import com.citronix.entity.Arbre;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 @Data
 public class ArbreDto {
@@ -12,21 +13,7 @@ public class ArbreDto {
     private int age;
     private double productivite;
     private int champId;
+//    private List<RecolteDto> recoltes;
 
-    public static ArbreDto toDto(Arbre arbre) {
-        ArbreDto dto = new ArbreDto();
-        dto.setId(arbre.getId());
-        dto.setDatePlantation(arbre.getDatePlantation());
-        dto.setAge(arbre.getAge());
-        dto.setProductivite(arbre.getProductivite());
-        dto.setChampId(arbre.getChamp().getId());
-        return dto;
-    }
 
-    public static Arbre toEntity(ArbreDto dto) {
-        Arbre arbre = new Arbre();
-        arbre.setId(dto.getId());
-        arbre.setDatePlantation(dto.getDatePlantation());
-        return arbre;
-    }
 }
