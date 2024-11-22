@@ -29,6 +29,7 @@ public class Champ {
     private double superficie;
 
     @ManyToOne
+    @JoinColumn(name = "ferme_id")
     @NotEmpty(message = "La ferme associée ne peut pas être vide")
     private Ferme ferme;
 

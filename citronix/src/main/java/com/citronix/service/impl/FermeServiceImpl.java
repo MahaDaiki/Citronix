@@ -6,6 +6,7 @@ import com.citronix.dto.FermeDto;
 import com.citronix.dto.FermeSearchCriteria;
 import com.citronix.entity.Ferme;
 import com.citronix.exception.ResourceNotFoundException;
+import com.citronix.mapper.FermeMapper;
 import com.citronix.repository.FermeRepository;
 import com.citronix.service.interfaces.FermeServiceInt;
 import jakarta.persistence.EntityManager;
@@ -26,15 +27,18 @@ public class FermeServiceImpl implements FermeServiceInt {
     @Autowired
     private FermeRepository fermeRepository;
 
-
+    @Autowired
+    private FermeMapper fermeMapper;
 
     @Override
     public FermeDto addFerme(FermeDto fermeDTO) {
         Validator.validateDateCreation(fermeDTO.getDateCreation());
         Validator.validateFermeSuperficie(fermeDTO.getSuperficie());
-        Ferme ferme = fermeDTO.toEntity();
+        Ferme ferme = fermeMapper.toEntity(fermeDTO);
+        System.out.println("Mapped Ferme entity: " + ferme);
         Ferme savedFerme = fermeRepository.save(ferme);
-        return new FermeDto().toDTO(savedFerme);
+        System.out.println("Saved Ferme: " + savedFerme);
+        return fermeMapper.toDto(savedFerme);
     }
 
     @Override
@@ -42,7 +46,7 @@ public class FermeServiceImpl implements FermeServiceInt {
         List<Ferme> fermeList = fermeRepository.findAll();
         List<FermeDto> fermeDtoList = new ArrayList<>();
         for (Ferme ferme : fermeList) {
-            fermeDtoList.add(new FermeDto().toDTO(ferme));
+            fermeDtoList.add(fermeMapper.toDto(ferme));
         }
         return fermeDtoList;
     }
@@ -51,7 +55,7 @@ public class FermeServiceImpl implements FermeServiceInt {
     public FermeDto getFermeById(int id) {
         Optional<Ferme> ferme = fermeRepository.findById(id);
         if(ferme.isPresent()) {
-            return new FermeDto().toDTO(ferme.get());
+            return  fermeMapper.toDto(ferme.get());
         }
         else {
             throw new ResourceNotFoundException("Ferme not found");
@@ -81,7 +85,7 @@ public class FermeServiceImpl implements FermeServiceInt {
 
 
         Ferme updatedFerme = fermeRepository.save(existingFerme);
-        return new FermeDto().toDTO(updatedFerme);
+        return  fermeMapper.toDto(updatedFerme);
     }
 
     @Override

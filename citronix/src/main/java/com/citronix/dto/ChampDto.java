@@ -8,6 +8,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 public class ChampDto {
 
@@ -23,24 +26,7 @@ public class ChampDto {
     @NotNull(message = "La ferme associée est requise")
     private int fermeId;
 
-    public Champ toEntity(Ferme ferme) {
-        Champ champ = new Champ();
-        champ.setId(this.id);
-        champ.setNom(this.nom);
-        champ.setSuperficie(this.superficie);
-        champ.setFerme(ferme);
-        return champ;
-    }
+    private List<ArbreDto> arbres;
 
 
-    public static ChampDto toDto(Champ champ) {
-        ChampDto dto = new ChampDto();
-        dto.setId(champ.getId());
-        dto.setNom(champ.getNom());
-        dto.setSuperficie(champ.getSuperficie());
-        if (champ.getFerme() != null) {
-            dto.setFermeId(champ.getFerme().getId());  // Set the ID of the Ferme from the Champ entity
-        }
-        return dto;
-    }
 }

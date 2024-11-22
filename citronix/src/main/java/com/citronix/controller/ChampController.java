@@ -29,6 +29,7 @@ public class ChampController {
     @GetMapping
     public ResponseEntity<List<ChampDto>> getAllChamps() {
         List<ChampDto> champs = champService.getAllChamps();
+        System.out.println("ChampDto: " +  champs);
         return ResponseEntity.ok(champs);
     }
 
