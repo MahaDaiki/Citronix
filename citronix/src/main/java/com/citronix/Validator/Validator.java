@@ -64,14 +64,30 @@ public class Validator {
     public static void validateDatePlantation(Ferme ferme, LocalDate datePlantation) {
         if (datePlantation.isBefore(ferme.getDateCreation())) {
             throw new IllegalArgumentException(
-                    "The planting date must be after the farm's creation date (" + ferme.getDateCreation() + ")."
+                    "La date de plantation doit être après la date de création de la ferme (" + ferme.getDateCreation() + ")."
             );
         }
         if (datePlantation.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException(
-                    "The planting date cannot be in the future."
+                    "La date de plantation ne peut pas être dans le futur."
             );
         }
     }
+
+    public static void validatePlantingBeforeHarvest(LocalDate datePlantation, LocalDate dateRecolte) {
+        if (datePlantation.isAfter(dateRecolte)) {
+            throw new IllegalArgumentException(
+                    "La date de plantation (" + datePlantation + ") doit être avant la date de récolte (" + dateRecolte + ")."
+            );
+        }
+    }
+
+    public static void validateHarvestDate(LocalDate dateRecolte) {
+        if (dateRecolte.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La date de récolte ne peut pas être dans le futur (" + dateRecolte + ").");
+        }
+    }
+
+
 }
 

@@ -7,6 +7,9 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface DetailRecolteMapper {
+
+    @Mapping(source = "recolte.id", target = "recolteId")
+    @Mapping(source = "arbre.id", target = "arbreId")
     DetailRecolteDto toDto(Detail_recolte detailRecolte);
 
     @Mapping(target = "recolte", ignore = true)
