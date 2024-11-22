@@ -11,4 +11,5 @@ import java.util.List;
 public interface DetailRecolteRepository extends JpaRepository<Detail_recolte, Integer> {
     List<Detail_recolte> findByRecolteId(int recolteId);
     List<Detail_recolte> findByArbreIdAndRecolteSaison(int arbreId, Saison saison);
+    List<Detail_recolte> findByArbreId(int id);
 }
