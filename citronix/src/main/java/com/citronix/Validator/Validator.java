@@ -2,6 +2,8 @@ package com.citronix.Validator;
 
 import com.citronix.entity.Champ;
 import com.citronix.entity.Ferme;
+import com.citronix.entity.Recolte;
+import com.citronix.entity.Vente;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,9 +47,9 @@ public class Validator {
 
 
     public static void validateTreeDensity(Champ champ, int numberOfTrees) {
-        double density = numberOfTrees / champ.getSuperficie();
+        double density = (double) numberOfTrees / (champ.getSuperficie()/10000);
         if (density > 100) {
-            throw new IllegalArgumentException("The density of trees per field exceeds the maximum of 100 trees per hectare.");
+            throw new IllegalArgumentException("La densité d'arbres par champ dépasse le maximum de 100 arbres par hectare.");
         }
     }
 
@@ -85,6 +87,13 @@ public class Validator {
     public static void validateHarvestDate(LocalDate dateRecolte) {
         if (dateRecolte.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("La date de récolte ne peut pas être dans le futur (" + dateRecolte + ").");
+        }
+    }
+    public static void validateRecolteTotalQuantity(Recolte recolte, List<Vente> ventes) {
+        double totalVentesQuantite = ventes.stream().mapToDouble(Vente::getQuantite).sum();
+
+        if (Math.abs(totalVentesQuantite - recolte.getQuantiteTotal()) > 0.01) {
+            throw new RuntimeException("La quantité totale des ventes associées ne correspond pas à la quantité totale de la récolte.");
         }
     }
 

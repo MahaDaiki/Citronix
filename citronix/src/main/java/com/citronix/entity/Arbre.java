@@ -35,4 +35,8 @@ public class Arbre {
 
     @ManyToMany(mappedBy = "arbres")
     private List<Recolte> recoltes;
+
+
+
+
 }

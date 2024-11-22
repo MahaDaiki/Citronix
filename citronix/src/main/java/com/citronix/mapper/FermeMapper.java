@@ -2,6 +2,7 @@ package com.citronix.mapper;
 
 import com.citronix.dto.FermeDto;
 import com.citronix.entity.Ferme;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,6 +13,7 @@ public interface FermeMapper {
     @Mapping(source = "localisation", target = "localisation")
     @Mapping(source = "superficie", target = "superficie")
     @Mapping(source = "dateCreation", target = "dateCreation")
+
     FermeDto toDto(Ferme ferme);
 
 

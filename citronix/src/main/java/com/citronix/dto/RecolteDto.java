@@ -18,4 +18,5 @@ public class RecolteDto {
     private Saison saison;
     private double quantiteTotal;
     private List<Integer> arbresIds;
+    private List<Integer> venteIds;
 }
