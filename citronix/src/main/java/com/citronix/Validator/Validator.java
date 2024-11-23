@@ -96,6 +96,14 @@ public class Validator {
             throw new RuntimeException("La quantité totale des ventes associées ne correspond pas à la quantité totale de la récolte.");
         }
     }
+    public static void validatePlantingPeriod(LocalDate datePlantation) {
+        int month = datePlantation.getMonthValue();
+        if (month < 3 || month > 5) {
+            throw new IllegalArgumentException(
+                    "La plantation des arbres est uniquement autorisée entre les mois de mars et mai. Date donnée : " + datePlantation
+            );
+        }
+    }
 
 
 }

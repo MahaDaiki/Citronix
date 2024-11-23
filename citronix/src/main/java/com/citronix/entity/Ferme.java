@@ -37,6 +37,8 @@ public class Ferme {
     @NotNull(message = "Superficie ne peut pas etre null")
     private double superficie;
 
+    @NotNull
+    @PastOrPresent
     private LocalDate dateCreation;
 
     @OneToMany(mappedBy = "ferme", cascade = CascadeType.ALL)

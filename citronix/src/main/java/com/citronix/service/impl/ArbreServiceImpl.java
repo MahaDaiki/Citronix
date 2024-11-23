@@ -43,6 +43,7 @@ public class ArbreServiceImpl implements ArbreServiceInt {
         }
 
         Validator.validateDatePlantation(ferme, arbreDto.getDatePlantation());
+        Validator.validatePlantingPeriod(arbreDto.getDatePlantation());
         Validator.validateTreeDensity(champ, champ.getArbres().size() + 1);
 
 

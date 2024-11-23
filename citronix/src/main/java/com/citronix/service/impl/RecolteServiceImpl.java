@@ -26,9 +26,6 @@ public class RecolteServiceImpl implements RecolteServiceInt {
     private RecolteRepository recolteRepository;
 
     @Autowired
-    private ArbreRepository arbreRepository;
-
-    @Autowired
     private DetailRecolteRepository detailRecolteRepository;
 
     @Autowired

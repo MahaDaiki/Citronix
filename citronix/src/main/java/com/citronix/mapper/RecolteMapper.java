@@ -8,11 +8,13 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface RecolteMapper {
-//    @Mapping(target = "arbre.id", source = "arbresIds")
-//    @Mapping(target = "vente.id", source = "venteIds")
+
+//    @Mapping(target = "venteIds", ignore = true)
+//    @Mapping(target = "arbresIds", ignore = true)
     RecolteDto toDto(Recolte recolte);
 
     @Mapping(target = "arbres", ignore = true)
     @Mapping(target = "ventes", ignore = true)
     Recolte toEntity(RecolteDto recolteDto);
+
 }
