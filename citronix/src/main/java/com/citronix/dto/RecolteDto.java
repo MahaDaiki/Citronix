@@ -1,6 +1,5 @@
 package com.citronix.dto;
 
-
 import com.citronix.entity.Saison;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +18,5 @@ public class RecolteDto {
     private double quantiteTotal;
     private List<Integer> arbresIds;
     private List<Integer> venteIds;
+
 }

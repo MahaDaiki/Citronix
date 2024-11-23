@@ -15,4 +15,6 @@ public interface DetailRecolteMapper {
     @Mapping(target = "recolte", ignore = true)
     @Mapping(target = "arbre", ignore = true)
     Detail_recolte toEntity(DetailRecolteDto detailRecolteDto);
+
+
 }
