@@ -3,6 +3,7 @@ package com.citronix.controller;
 
 import com.citronix.service.interfaces.ArbreServiceInt;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.citronix.dto.ArbreDto;
@@ -28,8 +29,12 @@ public class ArbreController {
 
 
             @GetMapping
-            public ResponseEntity<List<ArbreDto>> getAllArbres() {
-                List<ArbreDto> arbres = arbreService.getAllArbres();
+            public ResponseEntity<Page<ArbreDto>> getAllArbres(
+                    @RequestParam(defaultValue = "0") int pageNum,
+                    @RequestParam(defaultValue = "2") int pageSize) {
+
+                Page<ArbreDto> arbres = arbreService.getAllArbres(pageNum, pageSize);
+
                 return ResponseEntity.ok(arbres);
             }
 

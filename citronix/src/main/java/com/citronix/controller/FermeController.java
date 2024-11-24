@@ -7,6 +7,7 @@ import com.citronix.service.interfaces.FermeServiceInt;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +27,11 @@ public class FermeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FermeDto>> getAllFermes() {
-        List<FermeDto> fermes = fermeService.getAllFermes();
+    public ResponseEntity<Page<FermeDto>> getAllFermes(
+            @RequestParam(defaultValue = "0") Integer pageNum,
+            @RequestParam(defaultValue = "2") Integer pageSize
+    ) {
+        Page<FermeDto> fermes = fermeService.getAllFermes(pageNum, pageSize);
         return ResponseEntity.ok(fermes);
     }
 

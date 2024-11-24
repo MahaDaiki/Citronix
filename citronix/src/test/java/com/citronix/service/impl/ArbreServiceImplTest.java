@@ -12,6 +12,7 @@ import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,21 +42,21 @@ public class ArbreServiceImplTest {
         champ = new Champ();
         champ.setId(1);
         champ.setNom("Champ A");
+        champ.setArbres(new ArrayList<>());
 
         arbreDto = new ArbreDto();
         arbreDto.setId(1);
-        arbreDto.setDatePlantation(LocalDate.of(2015, 1, 1));
+        arbreDto.setDatePlantation(LocalDate.of(2015, 3, 1));
         arbreDto.setChampId(1);
 
         arbre = new Arbre();
         arbre.setId(1);
-        arbre.setDatePlantation(LocalDate.of(2015, 1, 1));
+        arbre.setDatePlantation(LocalDate.of(2015, 3, 1));
         arbre.setChamp(champ);
     }
 
 //    @Test
-//    void addArbre_ShouldReturnArbreDto() {
-//
+//    void addArbre_ShouldAddArbreAndReturnDto() {
 //        when(champRepository.findById(anyInt())).thenReturn(Optional.of(champ));
 //        when(arbreMapper.toEntity(any(ArbreDto.class))).thenReturn(arbre);
 //        when(arbreRepository.save(any(Arbre.class))).thenReturn(arbre);
@@ -67,9 +68,37 @@ public class ArbreServiceImplTest {
 //        assertNotNull(result);
 //        assertEquals(1, result.getId());
 //        assertEquals(1, result.getChampId());
+//        assertEquals(1, champ.getArbres().size());
 //        verify(champRepository).findById(anyInt());
 //        verify(arbreRepository).save(any(Arbre.class));
 //    }
+
+
+    @Test
+    void deleteArbre_ShouldRemoveArbre() {
+
+        champ.getArbres().add(arbre);
+        when(arbreRepository.findById(anyInt())).thenReturn(Optional.of(arbre));
+        doNothing().when(arbreRepository).deleteById(anyInt());
+
+
+        arbreService.deleteArbre(1);
+
+
+        assertTrue(champ.getArbres().isEmpty());
+        verify(arbreRepository).deleteById(anyInt());
+        verify(champRepository).save(any(Champ.class));
+    }
+
+    @Test
+    void deleteArbre_ShouldThrowExceptionIfArbreNotFound() {
+
+        when(arbreRepository.findById(anyInt())).thenReturn(Optional.empty());
+
+
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> arbreService.deleteArbre(1));
+        assertEquals("Arbre non trouvé avec l'ID 1", thrown.getMessage());
+    }
 
     @Test
     void getArbreParId_ShouldReturnArbreDto() {
@@ -86,26 +115,14 @@ public class ArbreServiceImplTest {
         assertEquals(1, result.getChampId());
     }
 
-//    @Test
-//    void deleteArbre_ShouldRemoveArbre() {
-//
-//        when(arbreRepository.findById(anyInt())).thenReturn(Optional.of(arbre));
-//        doNothing().when(arbreRepository).deleteById(anyInt());
-//        when(champRepository.save(any(Champ.class))).thenReturn(champ);
-//
-//        arbreService.deleteArbre(1);
-//
-//
-//        verify(arbreRepository).deleteById(anyInt());
-//        verify(champRepository).save(any(Champ.class));
-//    }
-
     @Test
     void calculerAgeEtProductivite_ShouldCalculateCorrectly() {
-        Arbre arbre = new Arbre();
+
         arbre.setDatePlantation(LocalDate.of(2015, 1, 1));
 
+
         arbreService.calculerAgeEtProductivite(arbre);
+
 
         assertEquals(9, arbre.getAge());
         assertEquals(12.0, arbre.getProductivite(), 0.1);
@@ -113,6 +130,7 @@ public class ArbreServiceImplTest {
 
     @Test
     void addArbre_ShouldThrowExceptionIfChampNotFound() {
+
         when(champRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> arbreService.addArbre(arbreDto));

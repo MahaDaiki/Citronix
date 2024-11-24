@@ -1,6 +1,5 @@
 package com.citronix.repository;
 
-import com.citronix.dto.ArbreDto;
 import com.citronix.entity.Arbre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

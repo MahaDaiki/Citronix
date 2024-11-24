@@ -8,11 +8,12 @@ import com.citronix.entity.Detail_recolte;
 import com.citronix.entity.Recolte;
 import com.citronix.entity.Saison;
 import com.citronix.mapper.RecolteMapper;
-import com.citronix.repository.ArbreRepository;
+import org.springframework.data.domain.PageRequest;
 import com.citronix.repository.DetailRecolteRepository;
 import com.citronix.repository.RecolteRepository;
 import com.citronix.service.interfaces.RecolteServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -45,10 +46,10 @@ public class RecolteServiceImpl implements RecolteServiceInt {
     }
 
     @Override
-    public List<RecolteDto> getAllRecoltes() {
-        return recolteRepository.findAll().stream()
-                .map(recolteMapper::toDto)
-                .toList();
+    public Page<RecolteDto> getAllRecoltes(int pageNum, int pageSize) {
+        Page<Recolte> recoltePage = recolteRepository.findAll(PageRequest.of(pageNum, pageSize));
+
+            return recoltePage.map(recolteMapper::toDto);
 
     }
 

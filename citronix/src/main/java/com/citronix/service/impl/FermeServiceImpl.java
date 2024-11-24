@@ -9,16 +9,12 @@ import com.citronix.exception.ResourceNotFoundException;
 import com.citronix.mapper.FermeMapper;
 import com.citronix.repository.FermeRepository;
 import com.citronix.service.interfaces.FermeServiceInt;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -42,13 +38,10 @@ public class FermeServiceImpl implements FermeServiceInt {
     }
 
     @Override
-    public List<FermeDto> getAllFermes() {
-        List<Ferme> fermeList = fermeRepository.findAll();
-        List<FermeDto> fermeDtoList = new ArrayList<>();
-        for (Ferme ferme : fermeList) {
-            fermeDtoList.add(fermeMapper.toDto(ferme));
-        }
-        return fermeDtoList;
+    public Page<FermeDto> getAllFermes(int pageNum, int pageSize) {
+
+        Page<Ferme> fermePage = fermeRepository.findAll(PageRequest.of(pageNum, pageSize));
+        return fermePage.map(fermeMapper::toDto);
     }
 
     @Override

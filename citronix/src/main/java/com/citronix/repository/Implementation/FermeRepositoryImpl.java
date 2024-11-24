@@ -5,7 +5,6 @@ import com.citronix.dto.FermeSearchCriteria;
 import com.citronix.entity.Ferme;
 import com.citronix.mapper.FermeMapper;
 import com.citronix.repository.CustomFermeRepository;
-import com.citronix.repository.FermeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;

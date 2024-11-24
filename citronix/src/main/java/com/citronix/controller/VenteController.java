@@ -5,6 +5,7 @@ import com.citronix.dto.VenteDto;
 import com.citronix.service.interfaces.VenteServiceInt;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,8 +48,12 @@ public class VenteController {
 
 
     @GetMapping
-    public ResponseEntity<List<VenteDto>> getAllVentes() {
-        List<VenteDto> ventes = venteService.getAllVentes();
+    public ResponseEntity<Page<VenteDto>> getAllVentes(
+            @RequestParam(defaultValue = "0") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize) {
+
+        Page<VenteDto> ventes = venteService.getAllVentes(pageNum, pageSize);
+
         return ResponseEntity.ok(ventes);
     }
 }

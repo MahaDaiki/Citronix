@@ -3,6 +3,7 @@ import com.citronix.dto.ChampDto;
 import com.citronix.entity.Champ;
 import com.citronix.entity.Ferme;
 import com.citronix.exception.ResourceNotFoundException;
+import com.citronix.mapper.ChampMapper;
 import com.citronix.repository.ChampRepository;
 import com.citronix.repository.FermeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +31,9 @@ class ChampServiceImplTest {
 
     @Mock
     private FermeRepository fermeRepository;
+
+    @Mock
+    private ChampMapper champMapper;
 
     @InjectMocks
     private ChampServiceImpl champService;
@@ -53,8 +60,9 @@ class ChampServiceImplTest {
     @Test
     void addChamp_ShouldReturnAddedChamp_WhenValidData() {
         when(fermeRepository.findById(1)).thenReturn(Optional.of(ferme));
+        when(champMapper.toEntity(any(ChampDto.class))).thenReturn(champ);
         when(champRepository.save(any(Champ.class))).thenReturn(champ);
-        when(fermeRepository.save(any(Ferme.class))).thenReturn(ferme);
+        when(champMapper.toDto(any(Champ.class))).thenReturn(champDto);
 
         ChampDto result = champService.addChamp(champDto);
 
@@ -62,8 +70,7 @@ class ChampServiceImplTest {
         assertEquals("Champ1", result.getNom());
         verify(champRepository, times(1)).save(any(Champ.class));
 
-        // Add logging to debug
-        System.out.println("ChampDto result: " + result);
+
     }
 
 
@@ -76,18 +83,33 @@ class ChampServiceImplTest {
     }
 
     @Test
-    void getAllChamps_ShouldReturnListOfChamps() {
-        when(champRepository.findAll()).thenReturn(Arrays.asList(champ));
+    void getAllChamps_ShouldReturnPaginatedListOfChamps() {
+        // Arrange
+        Champ champ = new Champ();
+        champ.setNom("Champ1");
+        ChampDto champDto = new ChampDto();
+        champDto.setNom("Champ1");
 
-        List<ChampDto> champs = champService.getAllChamps();
 
-        assertEquals(1, champs.size());
-        assertEquals("Champ1", champs.get(0).getNom());
+        Page<ChampDto> champPage = new PageImpl<>(Arrays.asList(champDto));
+
+
+        when(champRepository.findAll(PageRequest.of(0, 10))).thenReturn(new PageImpl<>(Arrays.asList(champ)));
+        when(champMapper.toDto(any(Champ.class))).thenReturn(champDto);
+
+
+        Page<ChampDto> champs = champService.getAllChamps(0, 10);
+
+
+        assertEquals(1, champs.getContent().size());
+        assertEquals("Champ1", champs.getContent().get(0).getNom());
+        assertTrue(champs.hasContent());
     }
 
     @Test
     void getChampById_ShouldReturnChamp_WhenFound() {
         when(champRepository.findById(1)).thenReturn(Optional.of(champ));
+        when(champMapper.toDto(any(Champ.class))).thenReturn(champDto);
 
         ChampDto result = champService.getChampById(1);
 
@@ -125,14 +147,10 @@ class ChampServiceImplTest {
 
         when(champRepository.findById(1)).thenReturn(Optional.of(champ));
         when(champRepository.save(any(Champ.class))).thenReturn(champ);
-        Ferme ferme = new Ferme();
-        ferme.setId(1);
+        when(champMapper.toDto(any(Champ.class))).thenReturn(champDto);
         when(fermeRepository.findById(1)).thenReturn(Optional.of(ferme));
 
-
         champDto.setNom("Updated Champ");
-        champDto.setFermeId(1);
-
 
         ChampDto result = champService.updateChamp(1, champDto);
 
@@ -151,15 +169,14 @@ class ChampServiceImplTest {
 
     @Test
     void getChampsByFermeId_ShouldReturnChamps_WhenFermeExists() {
-        Ferme ferme = new Ferme();
-        Champ champ = new Champ();
-        ferme.setChamps(Arrays.asList(champ));
-
         when(fermeRepository.findById(1)).thenReturn(Optional.of(ferme));
+        ferme.setChamps(Arrays.asList(champ));
+        when(champMapper.toDto(any(Champ.class))).thenReturn(champDto);
 
         List<ChampDto> champs = champService.getChampsByFermeId(1);
 
         assertEquals(1, champs.size());
+        assertEquals("Champ1", champs.get(0).getNom());
     }
 
     @Test

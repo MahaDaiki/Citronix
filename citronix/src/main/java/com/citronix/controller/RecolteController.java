@@ -6,6 +6,7 @@ import com.citronix.dto.RecolteDto;
 import com.citronix.service.interfaces.RecolteServiceInt;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +32,10 @@ public class RecolteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RecolteDto>> getAllRecoltes() {
-        List<RecolteDto> recoltes = recolteService.getAllRecoltes();
+    public ResponseEntity<Page<RecolteDto>> getAllRecoltes(
+            @RequestParam(defaultValue = "0") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        Page<RecolteDto> recoltes = recolteService.getAllRecoltes(pageNum, pageSize);
         return ResponseEntity.ok(recoltes);
     }
 
