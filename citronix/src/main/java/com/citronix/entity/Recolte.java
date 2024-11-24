@@ -18,6 +18,7 @@ public class Recolte {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @PastOrPresent
     @NotNull(message = "La date de récolte est requise")
     private LocalDate dateRecolte;
 

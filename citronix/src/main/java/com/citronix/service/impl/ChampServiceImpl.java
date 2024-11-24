@@ -10,6 +10,8 @@ import com.citronix.repository.ChampRepository;
 import com.citronix.repository.FermeRepository;
 import com.citronix.service.interfaces.ChampServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -55,13 +57,9 @@ public class ChampServiceImpl implements ChampServiceInt {
 
 
     @Override
-    public List<ChampDto> getAllChamps() {
-        List<Champ> champs = champRepository.findAll();
-        List<ChampDto> champDtos = new ArrayList<>();
-        for (Champ champ : champs) {
-            champDtos.add(champMapper.toDto(champ));
-        }
-        return champDtos;
+    public Page<ChampDto> getAllChamps(int pageNum, int pageSize) {
+        Page<Champ> champPage = champRepository.findAll(PageRequest.of(pageNum, pageSize));
+        return champPage.map(champMapper::toDto);
     }
 
     @Override

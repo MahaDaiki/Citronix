@@ -9,11 +9,10 @@ import com.citronix.repository.RecolteRepository;
 import com.citronix.repository.VenteRepository;
 import com.citronix.service.interfaces.VenteServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class VenteServiceImpl implements VenteServiceInt {
@@ -100,9 +99,8 @@ public class VenteServiceImpl implements VenteServiceInt {
     }
 
     @Override
-    public List<VenteDto> getAllVentes() {
-
-        List<Vente> ventes = venteRepository.findAll();
-        return ventes.stream().map(venteMapper::toDto).collect(Collectors.toList());
+    public Page<VenteDto> getAllVentes(int pageNum, int pageSize) {
+        Page<Vente> ventePage = venteRepository.findAll(PageRequest.of(pageNum, pageSize));
+        return ventePage.map(venteMapper::toDto);
     }
 }

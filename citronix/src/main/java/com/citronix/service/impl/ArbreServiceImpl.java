@@ -10,6 +10,8 @@ import com.citronix.repository.ArbreRepository;
 import com.citronix.repository.ChampRepository;
 import com.citronix.service.interfaces.ArbreServiceInt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -59,12 +61,11 @@ public class ArbreServiceImpl implements ArbreServiceInt {
     }
 
     @Override
-    public List<ArbreDto> getAllArbres() {
-        List<Arbre> arbres = arbreRepository.findAll();
-        for (Arbre arbre : arbres) {
-            calculerAgeEtProductivite(arbre);
-        }
-        return arbres.stream().map(arbreMapper::toDto).collect(Collectors.toList());
+    public Page<ArbreDto> getAllArbres(int pageNum, int pageSize) {
+        Page<Arbre> arbrePage = arbreRepository.findAll(PageRequest.of(pageNum, pageSize));
+        arbrePage.getContent().forEach(this::calculerAgeEtProductivite);
+
+        return arbrePage.map(arbreMapper::toDto);
     }
 
     @Override

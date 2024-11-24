@@ -6,6 +6,7 @@ import com.citronix.repository.ChampRepository;
 import com.citronix.service.interfaces.ChampServiceInt;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,11 @@ public class ChampController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ChampDto>> getAllChamps() {
-        List<ChampDto> champs = champService.getAllChamps();
-        System.out.println("ChampDto: " +  champs);
+    public ResponseEntity<Page<ChampDto>> getAllChamps(
+            @RequestParam(defaultValue = "0") Integer pageNum,
+            @RequestParam(defaultValue = "2") Integer pageSize) {
+
+        Page<ChampDto> champs = champService.getAllChamps(pageNum, pageSize);
         return ResponseEntity.ok(champs);
     }
 
