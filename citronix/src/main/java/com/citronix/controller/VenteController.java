@@ -49,8 +49,8 @@ public class VenteController {
 
     @GetMapping
     public ResponseEntity<Page<VenteDto>> getAllVentes(
-            @RequestParam(defaultValue = "0") int pageNum,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "2") int pageSize) {
 
         Page<VenteDto> ventes = venteService.getAllVentes(pageNum, pageSize);
 

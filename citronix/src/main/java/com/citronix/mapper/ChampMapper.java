@@ -9,10 +9,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ChampMapper {
 
-    @Mapping(source = "ferme.id", target = "fermeId")
+   @Mapping(source = "ferme.id", target = "fermeId")
     ChampDto toDto(Champ champ);
 
-    @Mapping(target = "ferme", ignore = true)
+//  @Mapping(target = "ferme", ignore = true)
     Champ toEntity(ChampDto champDto);
 
 

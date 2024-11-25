@@ -30,7 +30,7 @@ public class ArbreController {
 
             @GetMapping
             public ResponseEntity<Page<ArbreDto>> getAllArbres(
-                    @RequestParam(defaultValue = "0") int pageNum,
+                    @RequestParam(defaultValue = "1") int pageNum,
                     @RequestParam(defaultValue = "2") int pageSize) {
 
                 Page<ArbreDto> arbres = arbreService.getAllArbres(pageNum, pageSize);

@@ -7,9 +7,9 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ArbreMapper {
-   @Mapping(source = "champ.id", target = "champId")
+  @Mapping(source = "champ.id", target = "champId")
     ArbreDto toDto(Arbre arbre);
 
-    @Mapping(target = "champ", ignore = true)
+//    @Mapping(target = "champ", ignore = true)
     Arbre toEntity(ArbreDto arbreDto);
 }

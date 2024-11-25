@@ -29,7 +29,7 @@ public class ChampController {
 
     @GetMapping
     public ResponseEntity<Page<ChampDto>> getAllChamps(
-            @RequestParam(defaultValue = "0") Integer pageNum,
+            @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "2") Integer pageSize) {
 
         Page<ChampDto> champs = champService.getAllChamps(pageNum, pageSize);

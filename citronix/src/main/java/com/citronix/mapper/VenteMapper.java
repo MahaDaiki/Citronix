@@ -10,6 +10,6 @@ public interface VenteMapper {
     @Mapping(target = "recolteId", source = "recolte.id")
     VenteDto toDto(Vente vente);
 
-    @Mapping(target = "recolte", ignore = true)
+//    @Mapping(target = "recolte", ignore = true)
     Vente toEntity(VenteDto venteDto);
 }

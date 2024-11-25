@@ -33,8 +33,8 @@ public class RecolteController {
 
     @GetMapping
     public ResponseEntity<Page<RecolteDto>> getAllRecoltes(
-            @RequestParam(defaultValue = "0") int pageNum,
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "2") int pageSize) {
         Page<RecolteDto> recoltes = recolteService.getAllRecoltes(pageNum, pageSize);
         return ResponseEntity.ok(recoltes);
     }

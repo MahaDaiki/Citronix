@@ -43,6 +43,7 @@ public class VenteServiceImpl implements VenteServiceInt {
         Vente savedVente = venteRepository.save(vente);
 
         recolte.getVentes().add(savedVente);
+
         recolteRepository.save(recolte);
 
         return venteMapper.toDto(savedVente);

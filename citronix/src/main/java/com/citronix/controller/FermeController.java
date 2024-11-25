@@ -28,7 +28,7 @@ public class FermeController {
 
     @GetMapping
     public ResponseEntity<Page<FermeDto>> getAllFermes(
-            @RequestParam(defaultValue = "0") Integer pageNum,
+            @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "2") Integer pageSize
     ) {
         Page<FermeDto> fermes = fermeService.getAllFermes(pageNum, pageSize);
