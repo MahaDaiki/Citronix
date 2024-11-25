@@ -1,4 +1,4 @@
-#Citronix - Application de gestion d'une ferme de citrons
+# Citronix - Application de gestion d'une ferme de citrons
 
 ## Description
 
