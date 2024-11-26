@@ -2,17 +2,17 @@ package com.citronix.dto;
 
 
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 
-@Data
+
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
+@Getter
 public class FermeDto {
     private int id;
     @NotBlank(message = "Le nom est requis")

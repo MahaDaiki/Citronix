@@ -92,8 +92,8 @@ public class Validator {
     public static void validateRecolteTotalQuantity(Recolte recolte, List<Vente> ventes) {
         double totalVentesQuantite = ventes.stream().mapToDouble(Vente::getQuantite).sum();
 
-        if (Math.abs(totalVentesQuantite - recolte.getQuantiteTotal()) > 0.01) {
-            throw new RuntimeException("La quantité totale des ventes associées ne correspond pas à la quantité totale de la récolte.");
+        if (totalVentesQuantite > recolte.getQuantiteTotal()) {
+            throw new RuntimeException("La quantité totale des ventes dépasse la quantité totale de la récolte.");
         }
     }
     public static void validatePlantingPeriod(LocalDate datePlantation) {

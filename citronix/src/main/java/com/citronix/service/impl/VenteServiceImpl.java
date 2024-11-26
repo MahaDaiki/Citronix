@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class VenteServiceImpl implements VenteServiceInt {
@@ -37,13 +39,18 @@ public class VenteServiceImpl implements VenteServiceInt {
 
         vente.setRecolte(recolte);
 
+
+
         double revenu = venteDto.getQuantite() * venteDto.getPrixUnitaire();
         vente.setRevenu(revenu);
+        List<Vente> ventes = recolte.getVentes();
+        ventes.add(vente);
+
+        Validator.validateRecolteTotalQuantity(recolte, ventes);
 
         Vente savedVente = venteRepository.save(vente);
 
-        recolte.getVentes().add(savedVente);
-
+        recolte.setVentes(ventes);
         recolteRepository.save(recolte);
 
         return venteMapper.toDto(savedVente);
@@ -61,6 +68,9 @@ public class VenteServiceImpl implements VenteServiceInt {
         existingVente.setPrixUnitaire(venteDto.getPrixUnitaire());
         existingVente.setDate(venteDto.getDate());
 
+        Recolte recolte = existingVente.getRecolte();
+
+        Validator.validateRecolteTotalQuantity(recolte, recolte.getVentes());
 
         double revenu = existingVente.getQuantite() * existingVente.getPrixUnitaire();
         existingVente.setRevenu(revenu);
@@ -68,8 +78,7 @@ public class VenteServiceImpl implements VenteServiceInt {
         Vente updatedVente = venteRepository.save(existingVente);
 
 
-        Recolte recolte = existingVente.getRecolte();
-        Validator.validateRecolteTotalQuantity(recolte, recolte.getVentes());
+
 
         return venteMapper.toDto(updatedVente);
     }

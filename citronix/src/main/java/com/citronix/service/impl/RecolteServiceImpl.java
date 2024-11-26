@@ -76,14 +76,14 @@ public class RecolteServiceImpl implements RecolteServiceInt {
         recolteRepository.deleteById(id);
     }
 
-    private void validateTreeNotInAnotherHarvest(Saison saison, Arbre arbre) {
-        List<Detail_recolte> existingDetails = detailRecolteRepository.findByArbreId(arbre.getId());
-        for (Detail_recolte detail : existingDetails) {
-            if (detail.getRecolte().getSaison().equals(saison)) {
-                throw new RuntimeException("Arbre ID " + arbre.getId() + " is already harvested in the same season.");
-            }
-        }
-    }
+//    private void validateTreeNotInAnotherHarvest(Saison saison, Arbre arbre) {
+//        List<Detail_recolte> existingDetails = detailRecolteRepository.findByArbreId(arbre.getId());
+//        for (Detail_recolte detail : existingDetails) {
+//            if (detail.getRecolte().getSaison().equals(saison)) {
+//                throw new RuntimeException("Arbre ID " + arbre.getId() + " is already harvested in the same season.");
+//            }
+//        }
+//    }
 
     private Saison determineSeason(LocalDate dateRecolte) {
         int month = dateRecolte.getMonthValue();

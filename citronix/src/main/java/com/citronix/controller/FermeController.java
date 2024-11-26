@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class FermeController {
     private FermeServiceInt fermeService;
 
     @PostMapping("/add")
-    public ResponseEntity<FermeDto> addFerme(@Valid @RequestBody FermeDto fermeDto) {
+    public ResponseEntity<FermeDto> addFerme(@Validated @RequestBody FermeDto fermeDto) {
         System.out.println("Received Ferme DTO: " + fermeDto);
         FermeDto result = fermeService.addFerme(fermeDto);
         return ResponseEntity.ok(result);
