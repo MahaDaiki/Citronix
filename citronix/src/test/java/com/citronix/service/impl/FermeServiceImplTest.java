@@ -12,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 
 import java.time.LocalDate;
@@ -68,17 +71,19 @@ public class FermeServiceImplTest {
     }
 
 
-//    @Test
-//    public void testGetAllFermes() {
-//        List<Ferme> fermeList = List.of(ferme);
-//        when(fermeRepository.findAll()).thenReturn(fermeList);
-//        when(fermeMapper.toDto(any(Ferme.class))).thenReturn(fermeDto);
-//        List<FermeDto> fermes = fermeService.getAllFermes();
-//
-//
-//        assert fermes.size() == 1;
-//        assert fermes.get(0).getNom().equals("Ferme Test");
-//    }
+    @Test
+    public void testGetAllFermes() {
+
+        List<Ferme> fermeList = List.of(ferme);
+        Page<Ferme> fermePage = new PageImpl<>(fermeList);
+        when(fermeRepository.findAll(PageRequest.of(0, 10))).thenReturn(fermePage);
+        when(fermeMapper.toDto(any(Ferme.class))).thenReturn(fermeDto);
+
+        Page<FermeDto> result = fermeService.getAllFermes(0, 10);
+
+        assert result.getTotalElements() == 1;
+        assert result.getContent().get(0).getNom().equals("Ferme Test");
+    }
 
     @Test
     public void testGetFermeById_Success() {

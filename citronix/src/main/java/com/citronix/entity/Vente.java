@@ -19,6 +19,7 @@ public class Vente {
     private int id;
 
     @NotNull(message = "La date de vente est requise")
+    @PastOrPresent
     private LocalDate date;
 
     @PositiveOrZero(message = "Le prix unitaire ne peut pas être négatif")

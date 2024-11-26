@@ -21,6 +21,7 @@ public class Arbre {
     private int id;
 
     @NotNull(message = "La date de plantation est requise")
+    @PastOrPresent
     private LocalDate datePlantation;
 
     @PositiveOrZero(message = "L'âge de l'arbre ne peut pas être négatif")
